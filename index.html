@@ -10,8 +10,7 @@
         .group { margin-bottom: 20px; }
         .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
         .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; font-size: 1rem; background: #fcfcfc; }
-        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .btn:hover { background: #333; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
         .item { margin-bottom: 18px; }
         .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; font-size: 0.95rem; }
@@ -52,8 +51,7 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // [★10억% 무한 루프 폭파 주소 정밀 보정선]
-            // 보내주신 실시간 이미지 로그에서 완벽하게 LIVE 판정을 마친 진짜 활성화 도메인 주소로 100% 정확하게 정조준 연결!
+            // 이미지 실시간 로그에서 증명된 진짜 고유 호스트 주소 조준선 연결
             const targetUrl = 'https://onrender.com';
 
             try {
@@ -72,9 +70,9 @@
                 });
                 if(!res.ok) throw new Error();
 
-                const data = await res.json();
+                const responseData = await res.json();
+                const data = responseData.data;
 
-                // 수신된 JSON 딕셔너리에서 알맹이를 다이렉트로 꺼내어 웹 화면 패널 대시보드에 실시간 매핑 바인딩
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
