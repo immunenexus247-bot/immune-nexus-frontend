@@ -39,7 +39,7 @@
             </div>
         </div>
         <div style="font-size:0.82rem;color:#777;border-top:1px solid #e5e5e5;padding-top:25px;line-height:1.5;">
-            <strong>LEGAL DISCLAIMER / 법적 면책 고지</strong>본 플랫폼은 연구 보조용 오픈 베타 서비스이며 예측 결과에 대해 개발자 및 소유자는 어써한 법적 손해배상 책임도 지지 않습니다.
+            <strong>LEGAL DISCLAIMER / 법적 면책 고지</strong>본 플랫폼은 연구 보조용 오픈 베타 서비스이며 예측 결과에 대해 개발자 및 소유자는 어떠한 법적 손해배상 책임도 지지 않습니다.
         </div>
     </div>
     <script>
@@ -51,17 +51,13 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // 실제 Render의 고유 인터넷 라이브 도메인 백엔드 서버 주소 정조준
+            // [교안 3, 4번 해결] Render 최신 동기화 호스트 주소 바인딩 완료
             const targetUrl = 'https://onrender.com';
 
             try {
                 const res = await fetch(targetUrl, {
                     method: 'POST',
-                    mode: 'cors',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         license_tier: "Standard Pro",
                         billing_cycle: "monthly",
@@ -72,12 +68,14 @@
                 });
                 if(!res.ok) throw new Error();
 
+                // 비동기 파싱 대기 및 1:1 딕셔너리 구조 추출 안착
                 const data = await res.json();
 
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
                 document.getElementById('oE').innerText = data.predicted_docking_energy_kcal_mol + ' kcal/mol';
+
                 document.getElementById('oV').innerText = data.verdict;
                 document.getElementById('oV').style.color = (data.verdict==='APPROVED_FOR_CLINICAL') ? '#00875a' : '#ff0000';
                 document.getElementById('oV').style.fontWeight = '700';
