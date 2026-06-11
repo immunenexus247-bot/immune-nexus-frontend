@@ -10,7 +10,8 @@
         .group { margin-bottom: 20px; }
         .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
         .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; font-size: 1rem; background: #fcfcfc; }
-        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #333; }
         .item { margin-bottom: 18px; }
         .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; font-size: 0.95rem; }
@@ -51,13 +52,12 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // Render 대시보드 실시간 로그 검증이 완수된 진짜 라이브 백엔드 서버 도메인 주소 정밀 바인딩
             const targetUrl = 'https://onrender.com';
 
             try {
                 const res = await fetch(targetUrl, {
                     method: 'POST',
-                    mode: 'cors', // 브라우저 차단 우회를 위한 교차 출처 명시
+                    mode: 'cors',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
@@ -70,8 +70,11 @@
                 });
                 if(!res.ok) throw new Error();
 
-                // 비동기 파싱 대기 및 일대일 직렬 변수 직접 매핑 바인딩
-                const data = await res.json();
+                const responseData = await res.json();
+
+                // [★무한 루프 완벽 파괴 핵심 교정 지점] 
+                // 백엔드가 포장해 던져준 JSON 바디에서 responseData.data 상자를 명확하게 열어 알맹이만 직접 참조 락인!
+                const data = responseData.data;
 
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
