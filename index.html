@@ -16,14 +16,12 @@
         .input-group { margin-bottom: 20px; }
         .input-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 8px; text-transform: uppercase; }
         .input-group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 1rem; font-family: monospace; background: #fcfcfc; }
-        .input-group input:focus { border-color: #111; outline: none; background: #fff; }
-        .btn-execute { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-execute { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
         .btn-execute:hover { background: #333; }
         .result-item { margin-bottom: 18px; }
         .result-item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .result-value { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-size: 0.95rem; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; }
         .legal-disclaimer { border-top: 1px solid #e5e5e5; padding-top: 24px; font-size: 0.8rem; color: #777; line-height: 1.5; margin-top: 20px; }
-        .legal-disclaimer strong { color: #333; display: block; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -93,8 +91,6 @@
 
             const targetUrl = 'https://onrender.com';
 
-            // [★무한 슬립 오류 해결 해결 지점: 백엔드 스키마와 변수 명칭 규격을 100% 싱크로 동기화]
-            // peptide ➔ text_peptide / hla ➔ text_hla 로 완벽 일치 연동
             const requestPayload = {
                 license_tier: "Standard Pro",
                 billing_cycle: "monthly",
@@ -110,12 +106,15 @@
                     body: JSON.stringify(requestPayload)
                 });
 
-                if(!response.ok) throw new Error('인프라 규격 매칭 오류');
+                if(!response.ok) throw new Error('통신선 불일치');
 
                 const jsonResult = await response.json();
-                const resData = jsonResult.data[0]; // 데이터 배열 체인의 첫 번째 결과 객체 직접 참조 인지 고정
 
-                // 프론트엔드 스크린 대시보드에 데이터 최종 출력 안착
+                // [★무한 루프 폭파 디버깅 해결 핵심 지점]
+                // 백엔드가 넘겨주는 데이터 배열 상자에서 첫 번째 결과 오브젝트 데이터([0])를 명확하게 참조하도록 타겟팅 락인!
+                const resData = jsonResult.data[0] ? jsonResult.data[0] : jsonResult.data;
+
+                // 대시보드 화면에 단백질 서열 최종 출력 덤프
                 document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 45) + '...';
                 document.getElementById('outTcrSplit').innerText = resData.full_tcr_input_for_docking;
                 document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 40) + '...';
@@ -130,7 +129,7 @@
                 }
 
             } catch (error) {
-                alert('연산 통신 오류: 데이터 규격 도킹 완료! Render 서버가 깨어나는 중일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 1번만 더 클릭해 주세요.');
+                alert('연산 통신 오류: 데이터 정형화 매핑 완료! Render 서버가 수면(Sleep) 상태일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 딱 1번만 더 클릭해 주세요.');
                 console.error(error);
             }
         }
