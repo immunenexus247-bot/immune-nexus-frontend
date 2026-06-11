@@ -10,7 +10,8 @@
         .group { margin-bottom: 20px; }
         .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
         .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; font-size: 1rem; background: #fcfcfc; }
-        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
+        .btn:hover { background: #333; }
         .item { margin-bottom: 18px; }
         .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; font-size: 0.95rem; }
@@ -51,14 +52,28 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
+            // [★무한 루프 폭파 주소 정밀 보정선]
+            // Render 대시보드 실시간 로그에 "Your service is live" 도장이 성공적으로 찍힌 
+            // 진짜 라이브 호스트 백엔드 서버 도메인 주소로 오타 없이 정조준 연결!
+            const targetUrl = 'https://onrender.com';
+
             try {
-                const res = await fetch('https://onrender.com', {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ license_tier:"Standard Pro", billing_cycle:"monthly", account_active_seats_count:3, current_month_cumulative_usage:500, queries:[{text_peptide:p, text_hla:h}] })
+                const res = await fetch(targetUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        license_tier: "Standard Pro",
+                        billing_cycle: "monthly",
+                        account_active_seats_count: 3,
+                        current_month_cumulative_usage: 500,
+                        queries: [{ text_peptide: p, text_hla: h }]
+                    })
                 });
                 if(!res.ok) throw new Error();
 
                 const data = await res.json();
+
+                // 받아온 JSON 딕셔너리 구조에서 알맹이를 다이렉트로 꺼내어 웹 패널 화면에 실시간 매핑 바인딩
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
