@@ -39,7 +39,7 @@
             </div>
         </div>
         <div style="font-size:0.82rem;color:#777;border-top:1px solid #e5e5e5;padding-top:25px;line-height:1.5;">
-            <strong>LEGAL DISCLAIMER / 법적 면책 고지</strong>본 플랫폼은 연구 보조용 오픈 베타 서비스이며 예측 결과에 대해 개발자 및 소유자는 어떠한 법적 손해배상 책임도 지지 않습니다.
+            <strong>LEGAL DISCLAIMER / 법적 면책 고지</strong>본 플랫폼은 연구 보조용 오픈 베타 서비스이며 예측 결과에 대해 개발자 및 소유자는 어써한 법적 손해배상 책임도 지지 않습니다.
         </div>
     </div>
     <script>
@@ -51,13 +51,13 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // 실제 라이브 가동 로그가 확인된 렌더 백엔드 주소로 정확히 연동
+            // 실제 Render의 고유 인터넷 라이브 도메인 백엔드 서버 주소 정조준
             const targetUrl = 'https://onrender.com';
 
             try {
                 const res = await fetch(targetUrl, {
                     method: 'POST',
-                    mode: 'cors', // 브라우저에 교차 통신 허용 신호 직접 전달
+                    mode: 'cors',
                     headers: { 
                         'Content-Type': 'application/json',
                         'Accept': 'application/json'
