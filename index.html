@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"><title>ImmuneNexus</title>
     <style>
-        body { font-family: sans-serif; background: #fafafa; color: #111; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, sans-serif; background: #fafafa; color: #111; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .w { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 30px; }
         .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
@@ -48,10 +48,11 @@
             try {
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,queries:[{text_peptide:p,text_hla:h}] })
+                    body: JSON.stringify({ license_tier:"Standard Pro", billing_cycle:"monthly", account_active_seats_count:3, current_month_cumulative_usage:500, queries:[{text_peptide:p, text_hla:h}] })
                 });
                 if(!res.ok) throw new Error();
 
+                // 단일 딕셔너리 구조 다이렉트 덤프 수식 바인딩
                 const data = await res.json();
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
@@ -59,6 +60,7 @@
                 document.getElementById('oE').innerText = data.predicted_docking_energy_kcal_mol + ' kcal/mol';
                 document.getElementById('oV').innerText = data.verdict;
                 document.getElementById('oV').style.color = (data.verdict==='APPROVED_FOR_CLINICAL') ? '#00875a' : '#ff0000';
+                document.getElementById('oV').style.fontWeight = '700';
             } catch(e) {
                 alert('Render 서버가 수면 모드 상태일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 1번만 더 클릭해 주세요.');
             }
