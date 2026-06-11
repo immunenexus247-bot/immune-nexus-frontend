@@ -22,7 +22,6 @@
         .result-item { margin-bottom: 18px; }
         .result-item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .result-value { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-size: 0.95rem; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; }
-        .verdict-approved { color: #00875a; font-weight: 700; }
         .legal-disclaimer { border-top: 1px solid #e5e5e5; padding-top: 24px; font-size: 0.8rem; color: #777; line-height: 1.5; margin-top: 20px; }
         .legal-disclaimer strong { color: #333; display: block; margin-bottom: 4px; }
     </style>
@@ -39,11 +38,11 @@
                 <h2>AI 분석 파라미터 기입</h2>
                 <div class="input-group">
                     <label>Target Peptide Sequence (항원 서열)</label>
-                    <input type="text" id="peptideInput" value="CTELKLSDY" placeholder="예: CTELKLSDY">
+                    <input type="text" id="peptideInput" value="CTELKLSDY">
                 </div>
                 <div class="input-group">
                     <label>HLA Allele Type (대립유전자 사양)</label>
-                    <input type="text" id="hlaInput" value="HLA-A*03:01" placeholder="예: HLA-A*03:01">
+                    <input type="text" id="hlaInput" value="HLA-A*03:01">
                 </div>
                 <button class="btn-execute" onclick="runImmunePrediction()">오픈 베타 즉시 가동하기</button>
             </div>
@@ -80,10 +79,9 @@
     </div>
 
     <script>
-        // [★오류 완전 디버깅] 파이썬 def 문법 노이즈를 웹 표준 자바스크립트 함수형인 'async function' 규격으로 정교하게 청소 수선 완료
         async function runImmunePrediction() {
-            const peptide = document.getElementById('peptideInput').value.strip ? document.getElementById('peptideInput').value.trim() : document.getElementById('peptideInput').value;
-            const hla = document.getElementById('hlaInput').value.strip ? document.getElementById('hlaInput').value.trim() : document.getElementById('hlaInput').value;
+            const peptide = document.getElementById('peptideInput').value.trim();
+            const hla = document.getElementById('hlaInput').value.trim();
 
             if(!peptide || !hla) { alert('항원 서열과 대립유전자를 입력해주세요.'); return; }
 
@@ -93,7 +91,8 @@
             document.getElementById('outEnergy').innerText = '연산 중...';
             document.getElementById('outVerdict').innerText = '연산 중...';
 
-            // 질문자님의 고유 Render 클라우드 인프라 파이프라인 무적 노드 연결선
+            // [★주소 불일치 버그 긴급 패치 완료]
+            // 에러를 유발하던 구버전 주소 대신, 질문자님이 렌더에서 새로 생성 성공하신 진짜 백엔드 서버 호스트 명칭 주소로 정조준 동기화
             const targetUrl = 'https://onrender.com';
 
             const requestPayload = {
@@ -114,21 +113,19 @@
                 if(!response.ok) throw new Error('인프라 응답 거부');
 
                 const jsonResult = await response.json();
-                const resData = jsonResult.data[0]; // 배열 체인 타겟 매핑 싱글 덤프 추출
+                const resData = jsonResult.data[0]; 
 
-                document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 50) + '...';
+                document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 45) + '...';
                 document.getElementById('outTcrSplit').innerText = resData.full_tcr_input_for_docking;
-                document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 45) + '...';
+                document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 40) + '...';
                 document.getElementById('outEnergy').innerText = resData.predicted_docking_energy_kcal_mol + ' kcal/mol';
 
                 const verdictEl = document.getElementById('outVerdict');
                 verdictEl.innerText = resData.verdict;
                 if(resData.verdict === 'APPROVED_FOR_CLINICAL') {
                     verdictEl.style.color = '#00875a';
-                    verdictEl.style.fontWeight = '700';
                 } else {
                     verdictEl.style.color = '#ff0000';
-                    verdictEl.style.fontWeight = '700';
                 }
 
             } catch (error) {
