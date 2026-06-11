@@ -89,6 +89,7 @@
             document.getElementById('outEnergy').innerText = '연산 중...';
             document.getElementById('outVerdict').innerText = '연산 중...';
 
+            // 질문자님이 개설 성공하신 Render 백엔드 라이브 전용 주소 정조준
             const targetUrl = 'https://onrender.com';
 
             const requestPayload = {
@@ -106,15 +107,15 @@
                     body: JSON.stringify(requestPayload)
                 });
 
-                if(!response.ok) throw new Error('통신선 불일치');
+                if(!response.ok) throw new Error('CORS 혹은 엔드포인트 응답 지연');
 
                 const jsonResult = await response.json();
 
-                // [★무한 루프 폭파 디버깅 해결 핵심 지점]
-                // 백엔드가 넘겨주는 데이터 배열 상자에서 첫 번째 결과 오브젝트 데이터([0])를 명확하게 참조하도록 타겟팅 락인!
-                const resData = jsonResult.data[0] ? jsonResult.data[0] : jsonResult.data;
+                // [★무한 루프 영구 소멸 핫픽스 적용 지점]
+                // 백엔드가 대괄호([]) 배열로 보내준 데이터 상자에서 "첫 번째 데이터 아이템([0])"을 정확하게 추출 지정!
+                const resData = jsonResult.data[0];
 
-                // 대시보드 화면에 단백질 서열 최종 출력 덤프
+                // 정형화 완료된 아미노산 및 에너지 데이터를 프론트 대시보드 화면에 다이렉트 출력 바인딩
                 document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 45) + '...';
                 document.getElementById('outTcrSplit').innerText = resData.full_tcr_input_for_docking;
                 document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 40) + '...';
