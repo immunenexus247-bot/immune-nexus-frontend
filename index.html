@@ -1,137 +1,66 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ImmuneNexus - Central Immunological AI Hub</title>
+    <meta charset="UTF-8"><title>ImmuneNexus</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #fafafa; color: #111; margin: 0; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
-        .wrapper { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 30px; }
-        .brand-header { text-align: center; margin-bottom: 20px; }
-        .brand-header h1 { font-size: 2.3rem; font-weight: 800; letter-spacing: -0.05em; margin: 0 0 10px 0; }
-        .brand-header p { font-size: 1.05rem; color: #555; margin: 0; }
-        .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
-        .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; box-shadow: 0 4px 30px rgba(0,0,0,0.01); }
-        .panel h2 { font-size: 1.25rem; font-weight: 700; margin-top: 0; margin-bottom: 24px; border-bottom: 1px solid #f0f0f0; padding-bottom: 12px; }
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 8px; text-transform: uppercase; }
-        .input-group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 1rem; font-family: monospace; background: #fcfcfc; }
-        .btn-execute { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
-        .btn-execute:hover { background: #333; }
-        .result-item { margin-bottom: 18px; }
-        .result-item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
-        .result-value { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-size: 0.95rem; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; }
-        .legal-disclaimer { border-top: 1px solid #e5e5e5; padding-top: 24px; font-size: 0.8rem; color: #777; line-height: 1.5; margin-top: 20px; }
+        body { font-family: sans-serif; background: #fafafa; color: #111; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        .w { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 30px; }
+        .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .group { margin-bottom: 20px; }
+        .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .item { margin-bottom: 18px; }
+        .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
+        .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; }
     </style>
 </head>
 <body>
-    <div class="wrapper">
-        <div class="brand-header">
-            <h1>ImmuneNexus Central Data Hub</h1>
-            <p>글로벌 오픈 베타 - 암 항원 대응 TCR 구조 예측 및 분리 매핑 포털</p>
-        </div>
-
-        <div class="workspace">
+    <div class="w">
+        <div style="text-align:center;"><h1 style="font-size:2.3rem;font-weight:800;">ImmuneNexus Central Data Hub</h1><p>글로벌 오픈 베타 - 암 항원 구조 예측 포털</p></div>
+        <div class="grid">
             <div class="panel">
                 <h2>AI 분석 파라미터 기입</h2>
-                <div class="input-group">
-                    <label>Target Peptide Sequence (항원 서열)</label>
-                    <input type="text" id="peptideInput" value="CTELKLSDY">
-                </div>
-                <div class="input-group">
-                    <label>HLA Allele Type (대립유전자 사양)</label>
-                    <input type="text" id="hlaInput" value="HLA-A*03:01">
-                </div>
-                <button class="btn-execute" onclick="runImmunePrediction()">오픈 베타 즉시 가동하기</button>
+                <div class="group"><label>Peptide Sequence</label><input type="text" id="pIn" value="CTELKLSDY"></div>
+                <div class="group"><label>HLA Allele Type</label><input type="text" id="hIn" value="HLA-A*03:01"></div>
+                <button class="btn" onclick="run()">오픈 베타 즉시 가동하기</button>
             </div>
-
             <div class="panel">
                 <h2>AI 구조 연산 결과 (7ms)</h2>
-                <div class="result-item">
-                    <label>Extracted HLA Amino Acid Sequence (MHC 자동 추출 서열)</label>
-                    <div class="result-value" id="outHlaSeq">데이터 대기 중...</div>
-                </div>
-                <div class="result-item">
-                    <label>Full TCR Input for Docking (알파/베타 독립 도메인 분리 서열)</label>
-                    <div class="result-value" id="outTcrSplit" style="font-weight:700;">데이터 대기 중...</div>
-                </div>
-                <div class="result-item">
-                    <label>AlphaFold3 Ready Combined Input (구조 AI 복사용 텍스트 체인)</label>
-                    <div class="result-value" id="outAfReady">데이터 대기 중...</div>
-                </div>
-                <div class="result-item">
-                    <label>Predicted Docking Free Energy (물리 결합 자유 에너지)</label>
-                    <div class="result-value" id="outEnergy" style="font-weight:bold;">데이터 대기 중...</div>
-                </div>
-                <div class="result-item">
-                    <label>Clinical Safety Verdict (최종 임상 윤리 심사 결과)</label>
-                    <div class="result-value" id="outVerdict">데이터 대기 중...</div>
-                </div>
+                <div class="item"><label>MHC Sequence</label><div class="val" id="oMhc">대기 중...</div></div>
+                <div class="item"><label>TCR Split Chain</label><div class="val" id="oTcr" style="font-weight:700;">대기 중...</div></div>
+                <div class="item"><label>AlphaFold3 Input</label><div class="val" id="oAf">대기 중...</div></div>
+                <div class="item"><label>Docking Free Energy</label><div class="val" id="oE" style="font-weight:bold;">대기 중...</div></div>
+                <div class="item"><label>Safety Verdict</label><div class="val" id="oV">대기 중...</div></div>
             </div>
         </div>
-
-        <div class="legal-disclaimer">
-            <strong>LEGAL DISCLAIMER / 법적 면책 고지</strong>
-            본 플랫폼(ImmuneNexus)은 연구 보조용 오픈 베타 서비스이며, 인공지능 예측 모델의 특성상 도출된 결합 에너지 및 면역 서열의 생물학적 활성, 실험적 재현성, 그리고 실제 임상 시험 성과에 대해 어떠한 명시적·묵시적 보증도 하지 않습니다. 개발자 및 소유자는 일체의 법적 손해배상 책임이나 귀책 의무를 지지 않음을 명시합니다.
-        </div>
+        <div style="font-size:0.8rem;color:#777;border-top:1px solid #e5e5e5;padding-top:20px;"><strong>법적 면책 고지:</strong> 본 서비스는 연구 보조용이며 일체의 손해배상 책임을 지지 않습니다.</div>
     </div>
-
     <script>
-        async function runImmunePrediction() {
-            const peptide = document.getElementById('peptideInput').value.trim();
-            const hla = document.getElementById('hlaInput').value.trim();
-
-            if(!peptide || !hla) { alert('항원 서열과 대립유전자를 입력해주세요.'); return; }
-
-            document.getElementById('outHlaSeq').innerText = '연산 중...';
-            document.getElementById('outTcrSplit').innerText = '연산 중...';
-            document.getElementById('outAfReady').innerText = '연산 중...';
-            document.getElementById('outEnergy').innerText = '연산 중...';
-            document.getElementById('outVerdict').innerText = '연산 중...';
-
-            // 질문자님이 개설 성공하신 Render 백엔드 라이브 전용 주소 정조준
-            const targetUrl = 'https://onrender.com';
-
-            const requestPayload = {
-                license_tier: "Standard Pro",
-                billing_cycle: "monthly",
-                account_active_seats_count: 3,
-                current_month_cumulative_usage: 500,
-                queries: [{ text_peptide: peptide, text_hla: hla }]
-            };
+        async function run() {
+            const p = document.getElementById('pIn').value.trim();
+            const h = document.getElementById('hIn').value.trim();
+            if(!p || !h) { alert('입력값을 확인해주세요.'); return; }
+            document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
+            document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
             try {
-                const response = await fetch(targetUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(requestPayload)
+                const res = await fetch('https://onrender.com', {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,queries:[{text_peptide:p,text_hla:h}] })
                 });
+                if(!res.ok) throw new Error();
 
-                if(!response.ok) throw new Error('CORS 혹은 엔드포인트 응답 지연');
-
-                const jsonResult = await response.json();
-
-                // [★무한 루프 영구 소멸 핫픽스 적용 지점]
-                // 백엔드가 대괄호([]) 배열로 보내준 데이터 상자에서 "첫 번째 데이터 아이템([0])"을 정확하게 추출 지정!
-                const resData = jsonResult.data[0];
-
-                // 정형화 완료된 아미노산 및 에너지 데이터를 프론트 대시보드 화면에 다이렉트 출력 바인딩
-                document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 45) + '...';
-                document.getElementById('outTcrSplit').innerText = resData.full_tcr_input_for_docking;
-                document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 40) + '...';
-                document.getElementById('outEnergy').innerText = resData.predicted_docking_energy_kcal_mol + ' kcal/mol';
-
-                const verdictEl = document.getElementById('outVerdict');
-                verdictEl.innerText = resData.verdict;
-                if(resData.verdict === 'APPROVED_FOR_CLINICAL') {
-                    verdictEl.style.color = '#00875a';
-                } else {
-                    verdictEl.style.color = '#ff0000';
-                }
-
-            } catch (error) {
-                alert('연산 통신 오류: 데이터 정형화 매핑 완료! Render 서버가 수면(Sleep) 상태일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 딱 1번만 더 클릭해 주세요.');
-                console.error(error);
+                const data = await res.json();
+                document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
+                document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
+                document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
+                document.getElementById('oE').innerText = data.predicted_docking_energy_kcal_mol + ' kcal/mol';
+                document.getElementById('oV').innerText = data.verdict;
+                document.getElementById('oV').style.color = (data.verdict==='APPROVED_FOR_CLINICAL') ? '#00875a' : '#ff0000';
+            } catch(e) {
+                alert('Render 서버가 수면 모드 상태일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 1번만 더 클릭해 주세요.');
             }
         }
     </script>
