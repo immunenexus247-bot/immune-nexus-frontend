@@ -51,7 +51,7 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // 렌더 실시간 이미지 로그에서 전면 입증 완료된 진짜 고유 호스트 API 게이트웨이 주소선 직접 매핑
+            // 렌더 실시간 로그창에서 확인된 고유 라이브 API 주소 다이렉트 연결
             const targetUrl = 'https://onrender.com';
 
             try {
@@ -70,8 +70,9 @@
                 });
                 if(!res.ok) throw new Error();
 
-                // 단일 상판 오브젝트 수식 직접 1:1 디코딩 덤프 바인딩
-                const data = await res.json();
+                // 단일 상판 오브젝트 1:1 디코딩 다이렉트 수식 바인딩
+                const responseData = await res.json();
+                const data = responseData.data;
 
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
