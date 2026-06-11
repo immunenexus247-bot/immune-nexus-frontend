@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8"><title>ImmuneNexus</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; background: #fafafa; color: #111; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        body { font-family: -apple-system, sans-serif; background: #fafafa; color: #111; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
         .w { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 30px; }
         .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .group { margin-bottom: 20px; }
         .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
         .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; font-size: 1rem; background: #fcfcfc; }
-        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; }
-        .btn:hover { background: #333; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
         .item { margin-bottom: 18px; }
         .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
         .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; font-size: 0.95rem; }
@@ -41,7 +40,7 @@
         </div>
         <div style="font-size:0.82rem;color:#777;border-top:1px solid #e5e5e5;padding-top:25px;line-height:1.5;">
             <strong style="color:#333;display:block;margin-bottom:5px;">LEGAL DISCLAIMER / 법적 면책 고지</strong>
-            본 플랫폼은 연구 보조용 오픈 베타 서비스이며, 인공지능 예측 모델의 특성상 도출된 활성 결과에 대해 일체의 명시적·묵시적 보증을 하지 않으며 소유자는 어떠한 법적 손해배상 책임도 지지 않습니다.
+            본 플랫폼은 연구 보조용 오픈 베타 서비스이며 예측 결과에 대해 개발자 및 소유자는 어떠한 법적 손해배상 책임도 지지 않습니다.
         </div>
     </div>
     <script>
@@ -60,7 +59,6 @@
                 });
                 if(!res.ok) throw new Error();
 
-                // 단일 오브젝트 덤프 수식 다이렉트 변수 할당
                 const data = await res.json();
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
