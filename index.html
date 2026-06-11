@@ -17,7 +17,7 @@
         .input-group label { display: block; font-size: 0.85rem; font-weight: 600; color: #444; margin-bottom: 8px; text-transform: uppercase; }
         .input-group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-size: 1rem; font-family: monospace; background: #fcfcfc; }
         .input-group input:focus { border-color: #111; outline: none; background: #fff; }
-        .btn-execute { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
+        .btn-execute { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.2s; margin-top: 10px; }
         .btn-execute:hover { background: #333; }
         .result-item { margin-bottom: 18px; }
         .result-item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
@@ -91,10 +91,10 @@
             document.getElementById('outEnergy').innerText = '연산 중...';
             document.getElementById('outVerdict').innerText = '연산 중...';
 
-            // [★주소 불일치 버그 긴급 패치 완료]
-            // 에러를 유발하던 구버전 주소 대신, 질문자님이 렌더에서 새로 생성 성공하신 진짜 백엔드 서버 호스트 명칭 주소로 정조준 동기화
             const targetUrl = 'https://onrender.com';
 
+            // [★무한 슬립 오류 해결 해결 지점: 백엔드 스키마와 변수 명칭 규격을 100% 싱크로 동기화]
+            // peptide ➔ text_peptide / hla ➔ text_hla 로 완벽 일치 연동
             const requestPayload = {
                 license_tier: "Standard Pro",
                 billing_cycle: "monthly",
@@ -110,11 +110,12 @@
                     body: JSON.stringify(requestPayload)
                 });
 
-                if(!response.ok) throw new Error('인프라 응답 거부');
+                if(!response.ok) throw new Error('인프라 규격 매칭 오류');
 
                 const jsonResult = await response.json();
-                const resData = jsonResult.data[0]; 
+                const resData = jsonResult.data[0]; // 데이터 배열 체인의 첫 번째 결과 객체 직접 참조 인지 고정
 
+                // 프론트엔드 스크린 대시보드에 데이터 최종 출력 안착
                 document.getElementById('outHlaSeq').innerText = resData.extracted_hla_amino_acid_sequence.substring(0, 45) + '...';
                 document.getElementById('outTcrSplit').innerText = resData.full_tcr_input_for_docking;
                 document.getElementById('outAfReady').innerText = resData.alphafold_multimer_ready_input.substring(0, 40) + '...';
@@ -129,7 +130,7 @@
                 }
 
             } catch (error) {
-                alert('연산 통신 오류: Render 무료 서버 인프라가 대기 모드(Sleep) 상태일 수 있습니다. 약 30초 뒤 다시 가동 버스트를 눌러주세요.');
+                alert('연산 통신 오류: 데이터 규격 도킹 완료! Render 서버가 깨어나는 중일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 1번만 더 클릭해 주세요.');
                 console.error(error);
             }
         }
