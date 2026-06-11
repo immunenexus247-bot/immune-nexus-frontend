@@ -51,15 +51,17 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // [★교안 5번 반영: 주소창 정밀 타겟 조준선 패치]
-            // Render 실시간 서버 로그 검증이 끝난 진짜 고유 백엔드 서버 도메인 주소로 오타 없이 결속!
+            // Render 대시보드 실시간 로그 검증이 완수된 진짜 라이브 백엔드 서버 도메인 주소 정밀 바인딩
             const targetUrl = 'https://onrender.com';
 
             try {
-                console.log("DEBUG: 연산 패킷 전송을 시작합니다.");
                 const res = await fetch(targetUrl, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors', // 브라우저 차단 우회를 위한 교차 출처 명시
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify({
                         license_tier: "Standard Pro", billing_cycle: "monthly",
                         account_active_seats_count: 3, current_month_cumulative_usage: 500,
@@ -68,11 +70,9 @@
                 });
                 if(!res.ok) throw new Error();
 
-                // [★교안 6번 반영: 비동기 타이밍 락인 완료]
+                // 비동기 파싱 대기 및 일대일 직렬 변수 직접 매핑 바인딩
                 const data = await res.json();
-                console.log("DEBUG: 백엔드 정형 JSON 수신 성공", data);
 
-                // 받아온 JSON 데이터를 프론트 대시보드 화면 패널에 실시간 다이렉트 덤프 바인딩
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
@@ -81,7 +81,6 @@
                 document.getElementById('oV').style.color = (data.verdict==='APPROVED_FOR_CLINICAL') ? '#00875a' : '#ff0000';
                 document.getElementById('oV').style.fontWeight = '700';
             } catch(e) {
-                console.error("DEBUG: 통신 예외 발생", e);
                 alert('Render 서버가 수면 모드 상태일 수 있습니다. 확인을 누르고 [오픈 베타 즉시 가동하기] 버튼을 1번만 더 클릭해 주세요.');
             }
         }
