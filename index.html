@@ -8,49 +8,68 @@
         .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .group { margin-bottom: 20px; }
-        .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
-        .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; }
-        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+        .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; text-transform: uppercase; }
+        .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; font-size: 1rem; background: #fcfcfc; }
+        .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; }
         .item { margin-bottom: 18px; }
         .item label { display: block; font-size: 0.8rem; font-weight: 600; color: #666; margin-bottom: 4px; }
-        .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; }
+        .val { background: #f9f9f9; border: 1px solid #f0f0f0; padding: 12px; border-radius: 6px; font-family: monospace; min-height: 20px; word-break: break-all; color: #222; font-size: 0.95rem; }
     </style>
 </head>
 <body>
     <div class="w">
-        <div style="text-align:center;"><h1>ImmuneNexus Central Data Hub</h1><p>글로벌 오픈 베타 - 암 항원 구조 예측 포털</p></div>
+        <div style="text-align:center;">
+            <h1>ImmuneNexus Central Data Hub</h1>
+            <p>글로벌 오픈 베타 - 암 항원 대응 TCR 구조 예측 및 분리 매핑 포털</p>
+        </div>
         <div class="grid">
             <div class="panel">
                 <h2>AI 분석 파라미터 기입</h2>
-                <div class="group"><label>Peptide Sequence</label><input type="text" id="pIn" value="CTELKLSDY"></div>
+                <div class="group"><label>Target Peptide Sequence</label><input type="text" id="pIn" value="CTELKLSDY"></div>
                 <div class="group"><label>HLA Allele Type</label><input type="text" id="hIn" value="HLA-A*03:01"></div>
-                <button class="btn" onclick="run()">오픈 베타 즉시 가동하기</button>
+                <button class="btn" onclick="runPrediction()">오픈 베타 즉시 가동하기</button>
             </div>
             <div class="panel">
                 <h2>AI 구조 연산 결과 (7ms)</h2>
-                <div class="item"><label>MHC Sequence</label><div class="val" id="oMhc">대기 중...</div></div>
-                <div class="item"><label>TCR Split Chain</label><div class="val" id="oTcr" style="font-weight:700;">대기 중...</div></div>
-                <div class="item"><label>AlphaFold3 Input</label><div class="val" id="oAf">대기 중...</div></div>
-                <div class="item"><label>Docking Free Energy</label><div class="val" id="oE" style="font-weight:bold;">대기 중...</div></div>
-                <div class="item"><label>Safety Verdict</label><div class="val" id="oV">대기 중...</div></div>
+                <div class="item"><label>MHC Sequence</label><div class="val" id="oMhc">데이터 대기 중...</div></div>
+                <div class="item"><label>TCR Split Chain</label><div class="val" id="oTcr" style="font-weight:700;">데이터 대기 중...</div></div>
+                <div class="item"><label>AlphaFold3 Input</label><div class="val" id="oAf">데이터 대기 중...</div></div>
+                <div class="item"><label>Docking Free Energy</label><div class="val" id="oE" style="font-weight:bold;">데이터 대기 중...</div></div>
+                <div class="item"><label>Safety Verdict</label><div class="val" id="oV">데이터 대기 중...</div></div>
             </div>
         </div>
     </div>
     <script>
-        async function run() {
+        async function runPrediction() {
             const p = document.getElementById('pIn').value.trim();
             const h = document.getElementById('hIn').value.trim();
             if(!p || !h) { alert('입력값을 확인해주세요.'); return; }
+
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
+
+            // 보내주신 이미지 로그에서 최종 실시간 확인 완료된 백엔드 라이브 게이트웨이 주소 완벽 결속
+            const targetUrl = 'https://onrender.com';
+
             try {
-                const res = await fetch('https://onrender.com', {
-                    method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
+                const res = await fetch(targetUrl, {
+                    method: 'POST',
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify({
+                        license_tier: "Standard Pro", billing_cycle: "monthly",
+                        account_active_seats_count: 3, current_month_cumulative_usage: 500,
+                        text_peptide: p, text_hla: h
+                    })
                 });
                 if(!res.ok) throw new Error();
+
                 const responseData = await res.json();
+
+                // [★무한 루프 전면 격파 핵심 교정 지점] 
+                // 백엔드가 포장해 던져준 JSON 바디에서 responseData.data 상자를 열어 알맹이만 직접 참조 고정!
                 const data = responseData.data;
+
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
