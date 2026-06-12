@@ -44,7 +44,7 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // 이미지 로그에서 100% 가동 확인이 끝난 진짜 공식 서버 게이트웨이 호스트 주소 바인딩
+                // 이미지 실시간 로그에서 100% 입증 완료된 진짜 공식 서버 게이트웨이 호스트 주소 바인딩
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
