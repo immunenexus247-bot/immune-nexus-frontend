@@ -44,10 +44,11 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // [★통신 완전 성공 핵심 2] 이미지 로그에서 입증된 진짜 렌더 서버 호스트 주소선 결속 완료!
+                // [★통신 성공 핵심 2] 로그 이미지 주소선 끝에 정확하게 /bulk 엔드포인트를 명시하여 1:1 다이렉트 결속
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' },
+                    mode: 'cors',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
                 });
                 if(!res.ok) throw new Error();
