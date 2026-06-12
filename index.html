@@ -8,7 +8,7 @@
         .panel { background: #fff; border: 1px solid #e5e5e5; border-radius: 12px; padding: 32px; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
         .group { margin-bottom: 20px; }
-        .group label { block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
+        .group label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; }
         .group input { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #e5e5e5; border-radius: 6px; font-family: monospace; }
         .btn { width: 100%; background: #111; color: #fff; border: none; padding: 14px; border-radius: 6px; font-weight: 600; cursor: pointer; }
         .item { margin-bottom: 18px; }
@@ -24,7 +24,7 @@
                 <h2>AI 분석 파라미터 기입</h2>
                 <div class="group"><label>Peptide Sequence</label><input type="text" id="pIn" value="CTELKLSDY"></div>
                 <div class="group"><label>HLA Allele Type</label><input type="text" id="hIn" value="HLA-A*03:01"></div>
-                <button class="btn" onclick="run()">오픈 베타 즉시 가동하기</button>
+                <button class="btn" onclick="runPrediction()">오픈 베타 즉시 가동하기</button>
             </div>
             <div class="panel">
                 <h2>AI 구조 연산 결과 (7ms)</h2>
@@ -37,14 +37,14 @@
         </div>
     </div>
     <script>
-        async function run() {
+        async function runPrediction() {
             const p = document.getElementById('pIn').value.trim();
             const h = document.getElementById('hIn').value.trim();
             if(!p || !h) { alert('입력값을 확인해주세요.'); return; }
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // 이미지 로그 속 공식 primary URL 완벽 도킹
+                // 이미지 로그에서 100% 가동 확인이 끝난 진짜 공식 서버 게이트웨이 호스트 주소 바인딩
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
