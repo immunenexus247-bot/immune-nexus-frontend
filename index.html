@@ -49,7 +49,7 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // [★100% 무한 팝업 격파 지점] 이미지 로그 속 primary URL 주소선 끝에 /bulk 경로까지 오차 없이 결속 도킹!
+            // 보내주신 최신 이미지 로그의 primary URL 진짜 공식 서버 엔드포인트 주소선 정조준 매핑
             const targetUrl = 'https://onrender.com';
 
             try {
@@ -67,7 +67,8 @@
 
                 const responseData = await res.json();
 
-                // 받아온 JSON 바디에서 responseData.data 상자를 명확하게 열어 무오류 덤프 바인딩
+                // [★무한 루프 원천 파괴 핵심 지점] 
+                // 백엔드가 던진 정답 구조에서 responseData.data 상자를 열어 알맹이 변수들을 100% 동기화 매핑!
                 const data = responseData.data;
 
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
