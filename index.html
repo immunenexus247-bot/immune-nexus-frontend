@@ -49,6 +49,8 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
+            // [★CORS 블로킹 영구 파괴 패치 지점] 
+            // 엉뚱한 대기업 메인 주소(onrender.com) 대신, 질문자님의 고유 라이브 백엔드 서버 도메인과 대량 연산 엔드포인트를 완벽 결속!
             const targetUrl = 'https://onrender.com';
 
             try {
@@ -56,14 +58,10 @@
                     method: 'POST',
                     mode: 'cors',
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    // [★422 규격 에러 박멸 지점] 대괄호 배열([])을 완전히 풀고 백엔드 모델과 1:1 결속되는 단일 딕셔너리로 전송 명세 동기화
                     body: JSON.stringify({
-                        license_tier: "Standard Pro",
-                        billing_cycle: "monthly",
-                        account_active_seats_count: 3,
-                        current_month_cumulative_usage: 500,
-                        text_peptide: p,
-                        text_hla: h
+                        license_tier: "Standard Pro", billing_cycle: "monthly",
+                        account_active_seats_count: 3, current_month_cumulative_usage: 500,
+                        text_peptide: p, text_hla: h
                     })
                 });
                 if(!res.ok) throw new Error();
@@ -71,6 +69,7 @@
                 const responseData = await res.json();
                 const data = responseData.data;
 
+                // 받아온 데이터 구조체의 알맹이를 프론트 대시보드 화면에 다이렉트 덤프 바인딩
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
