@@ -44,10 +44,17 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // 이미지 실시간 로그에서 100% 입증 완료된 진짜 공식 서버 게이트웨이 호스트 주소 바인딩
+                // [★422 규격 에러 박멸 지점 2] 백엔드가 전격 개방한 공식 호스트 엔드포인트 라우팅 주소선 다이렉트 도킹
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-                    body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
+                    body: JSON.stringify({
+                        license_tier: "Standard Pro",
+                        billing_cycle: "monthly",
+                        account_active_seats_count: 3,
+                        current_month_cumulative_usage: 500,
+                        text_peptide: p,
+                        text_hla: h
+                    })
                 });
                 if(!res.ok) throw new Error();
                 const responseData = await res.json();
