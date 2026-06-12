@@ -52,6 +52,7 @@
             // [★CORS 블로킹 영구 파괴 패치 지점] 
             // 엉뚱한 대기업 메인 주소(onrender.com) 대신, 질문자님의 고유 라이브 백엔드 서버 도메인과 대량 연산 엔드포인트를 완벽 결속!
             const targetUrl = 'https://onrender.com';
+            
 
             try {
                 const res = await fetch(targetUrl, {
