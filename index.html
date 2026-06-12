@@ -44,7 +44,7 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // [★통신 완전 성공 핵심 2] 로그 이미지에서 검증이 완수된 진짜 공식 렌더 API 서버 기지 호스트 연결 정조준!
+                // [★통신 완전 성공 핵심 2] 로그 이미지에서 검증이 끝난 진짜 렌더 서버 호스트 주소선으로 정밀 타겟 바인딩!
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', mode: 'cors', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
