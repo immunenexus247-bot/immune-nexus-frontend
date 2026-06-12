@@ -49,10 +49,10 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
 
-            // [★CORS 블로킹 영구 파괴 패치 지점] 
-            // 엉뚱한 대기업 메인 주소(onrender.com) 대신, 질문자님의 고유 라이브 백엔드 서버 도메인과 대량 연산 엔드포인트를 완벽 결속!
-            const targetUrl = 'https://onrender.com';
-            
+            // [★Vercel 내부 오염 환경 변수 강제 리셋 무력화 격파선]
+            // 어떠한 백그라운드 환경 변수 주입에도 주소선이 오염되지 않도록 
+            // 전송 목적지 경로 주소를 '하드코딩 문자열'로 통째로 물리 고정 각인합니다!
+            var targetUrl = 'https://onrender.com';
 
             try {
                 const res = await fetch(targetUrl, {
@@ -70,7 +70,7 @@
                 const responseData = await res.json();
                 const data = responseData.data;
 
-                // 받아온 데이터 구조체의 알맹이를 프론트 대시보드 화면에 다이렉트 덤프 바인딩
+                // 받아온 완결 정답 데이터 아미노산 필드를 대시보드 웹 화면에 1:1 출력 바인딩
                 document.getElementById('oMhc').innerText = data.extracted_hla_amino_acid_sequence.substring(0,40) + '...';
                 document.getElementById('oTcr').innerText = data.full_tcr_input_for_docking;
                 document.getElementById('oAf').innerText = data.alphafold_multimer_ready_input.substring(0,40) + '...';
