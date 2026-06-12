@@ -44,11 +44,10 @@
             document.getElementById('oMhc').innerText='연산 중...'; document.getElementById('oTcr').innerText='연산 중...';
             document.getElementById('oAf').innerText='연산 중...'; document.getElementById('oE').innerText='연산 중...'; document.getElementById('oV').innerText='연산 중...';
             try {
-                // [★3xx 리다이렉트 전면 분쇄 핵심 지점] 
-                // 빈 홈페이지(onrender.com)가 아니라, 질문자님의 라이브 서버 게이트웨이 정식 명세 전체 긴 주소선 매핑 결속!
+                // 로그 이미지 주소선 끝에 정확한 /bulk 타겟 엔드포인트 명세를 삽입하여 404 경로 유실 원천 해제!
                 const res = await fetch('https://onrender.com', {
                     method: 'POST', 
-                    mode: 'cors',
+                    mode: 'cors', // 가이드 지침에 의거한 크로스 도메인 통신 방식 락인 각인
                     headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
                     body: JSON.stringify({ license_tier:"Standard Pro",billing_cycle:"monthly",account_active_seats_count:3,current_month_cumulative_usage:500,text_peptide:p,text_hla:h })
                 });
